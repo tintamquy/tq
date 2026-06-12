@@ -280,49 +280,79 @@
             #content-wrapper {
                 justify-content: center;
             }
+            .glass-card {
+                text-align: center;
+            }
+            .logo {
+                justify-content: center;
+            }
+            .services {
+                align-items: center;
+            }
+            .service-item {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .action-group {
+                justify-content: center;
+            }
         }
 
         @media (max-width: 768px) {
             #content-wrapper {
                 padding: 15px;
-                align-items: flex-end;
+                align-items: center; /* Center the card */
             }
             .glass-card {
                 padding: 2.5rem 1.5rem;
-                margin-top: 10vh;
-                border-radius: 20px;
+                margin-top: 0;
+                background: linear-gradient(135deg, rgba(6, 11, 25, 0.7) 0%, rgba(6, 11, 25, 0.4) 100%);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                border-left: 1px solid rgba(255, 255, 255, 0.1);
+                border-right: none;
+                border-bottom: none;
+                border-radius: 24px;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
             }
             h1 {
-                font-size: 2.8rem;
+                font-size: 3rem;
+                text-shadow: 0 5px 15px rgba(0,0,0,0.5);
             }
             h2 {
-                font-size: 1rem;
-                margin-bottom: 2rem;
+                font-size: 1.05rem;
+                margin-bottom: 2.5rem;
+                color: #e0e7ff;
             }
             .service-item {
-                padding: 1rem 1.2rem;
+                padding: 1.2rem;
+                background: rgba(255, 255, 255, 0.05);
             }
             .service-text {
-                font-size: 0.95rem;
+                font-size: 1rem;
+                text-align: left;
             }
             .action-group {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
+                align-items: center;
+                gap: 20px;
             }
             .btn-primary {
                 width: 100%;
                 box-sizing: border-box;
-                padding: 1rem 2rem;
+                padding: 1.2rem 2rem;
+                font-size: 1.2rem;
+            }
+            .email-display {
+                font-size: 1.1rem;
             }
         }
         
         @media (max-width: 480px) {
             h1 {
-                font-size: 2.4rem;
+                font-size: 2.5rem;
             }
             .logo {
-                font-size: 1rem;
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -371,7 +401,7 @@
     const scene = new THREE.Scene();
     
     // Camera setup
-    const getFov = () => window.innerWidth < 768 ? 90 : 70;
+    const getFov = () => window.innerWidth < 768 ? 85 : 70;
     const camera = new THREE.PerspectiveCamera(getFov(), window.innerWidth / window.innerHeight, 0.1, 1000);
     
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
@@ -380,7 +410,7 @@
     container.appendChild(renderer.domElement);
 
     // Responsive globe sizing
-    const getGlobeSize = () => window.innerWidth < 768 ? 2.2 : 3.2;
+    const getGlobeSize = () => window.innerWidth < 768 ? 2.8 : 3.2;
     const globeSize = getGlobeSize();
 
     // Create Globe Group for easier rotation
@@ -479,7 +509,8 @@
         if(window.innerWidth > 992) {
             globeGroup.position.set(4, 0, 0);
         } else {
-            globeGroup.position.set(0, 2, -2);
+            // Center the globe perfectly on mobile, floating majestically behind the glass card
+            globeGroup.position.set(0, 0, 0);
         }
     };
     updateGlobePosition();
