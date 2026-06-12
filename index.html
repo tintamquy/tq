@@ -5,14 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Công ty TNHH Công Nghệ Số TQ</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-blue: #0047AB;
-            --light-blue: #4da8da;
+            --light-blue: #00d2ff;
+            --mid-blue: #3a7bd5;
             --text-color: #ffffff;
-            --glass-bg: rgba(11, 17, 32, 0.65);
-            --glass-border: rgba(77, 168, 218, 0.2);
+            --glass-bg: rgba(6, 11, 25, 0.4);
+            --glass-border: rgba(0, 210, 255, 0.3);
         }
 
         body, html {
@@ -21,9 +22,41 @@
             width: 100%;
             height: 100%;
             overflow-x: hidden;
-            font-family: 'Inter', sans-serif;
-            background-color: #050810;
+            font-family: 'Outfit', sans-serif;
+            background-color: #02050a;
             color: var(--text-color);
+        }
+
+        /* Ambient glowing orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            opacity: 0.5;
+            animation: float 10s infinite alternate ease-in-out;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(0, 71, 171, 0.6);
+            top: -100px;
+            left: -100px;
+        }
+
+        .orb-2 {
+            width: 400px;
+            height: 400px;
+            background: rgba(0, 210, 255, 0.3);
+            bottom: -150px;
+            right: -100px;
+            animation-duration: 15s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
         }
 
         /* Canvas taking the full background */
@@ -42,27 +75,28 @@
             z-index: 2;
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* Default for desktop: content on the left */
+            justify-content: flex-start;
             min-height: 100vh;
-            padding: 5%;
-            pointer-events: none; /* Let clicks pass through to globe if needed */
+            padding: 5% 10%;
+            pointer-events: none;
         }
 
         .glass-card {
             pointer-events: auto;
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(15, 23, 42, 0.2) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 3rem;
-            max-width: 600px;
+            border-radius: 30px;
+            padding: 3.5rem;
+            max-width: 650px;
             width: 100%;
-            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
-            transform: translateY(30px);
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), 
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            transform: translateY(40px);
             opacity: 0;
-            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            animation-delay: 0.2s;
+            animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.3s;
         }
 
         @keyframes fadeUp {
@@ -73,124 +107,219 @@
         }
 
         .logo {
-            font-weight: 700;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
+            font-weight: 800;
+            font-size: 1.3rem;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            color: var(--light-blue);
+            background: linear-gradient(90deg, #00d2ff 0%, #3a7bd5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 1.5rem;
-            display: inline-block;
-            border-bottom: 2px solid var(--primary-blue);
-            padding-bottom: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 2px;
+            background: linear-gradient(90deg, #00d2ff, transparent);
         }
 
         h1 {
-            font-size: 3.8rem;
-            font-weight: 700;
+            font-size: 4rem;
+            font-weight: 800;
             margin: 0 0 1rem 0;
-            line-height: 1.15;
-            background: linear-gradient(135deg, #ffffff 0%, #8ca5c7 100%);
+            line-height: 1.1;
+            color: #fff;
+        }
+
+        .highlight-text {
+            background: linear-gradient(to right, #00d2ff, #3a7bd5, #00d2ff);
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            animation: shine 4s linear infinite;
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
         }
 
         h2 {
-            font-size: 1.25rem;
-            font-weight: 400;
-            color: #a0aec0;
-            margin: 0 0 2.5rem 0;
-            line-height: 1.6;
+            font-size: 1.2rem;
+            font-weight: 300;
+            color: #b9d2f0;
+            margin: 0 0 3rem 0;
+            line-height: 1.7;
         }
 
         .services {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-            margin-bottom: 2.5rem;
+            gap: 1.2rem;
+            margin-bottom: 3rem;
         }
 
         .service-item {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 1.2rem 1.5rem;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1.2rem 1.8rem;
+            border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: var(--light-blue);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+            transform-origin: bottom;
         }
 
         .service-item:hover {
-            background: rgba(77, 168, 218, 0.15);
-            border-color: rgba(77, 168, 218, 0.4);
+            background: rgba(0, 210, 255, 0.05);
+            border-color: rgba(0, 210, 255, 0.3);
             transform: translateX(10px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .service-item:hover::before {
+            transform: scaleY(1);
         }
 
         .service-icon {
             color: var(--light-blue);
-            margin-right: 15px;
-            font-size: 1.5rem;
+            margin-right: 20px;
+            font-size: 1.8rem;
+            text-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+        }
+
+        .service-text {
+            font-size: 1.1rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .action-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
         .btn-primary {
+            position: relative;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 1.1rem 2.5rem;
-            background: linear-gradient(135deg, var(--primary-blue), #003380);
+            padding: 1.2rem 3rem;
+            background: linear-gradient(90deg, #0047AB, #00d2ff);
             color: white;
             text-decoration: none;
-            border-radius: 30px;
+            border-radius: 50px;
             font-weight: 600;
             font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0, 71, 171, 0.3);
-            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.3);
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, #00d2ff, #0047AB);
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            opacity: 0;
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 71, 171, 0.5);
-            background: linear-gradient(135deg, #0056cc, var(--primary-blue));
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 210, 255, 0.5);
+        }
+
+        .btn-primary:hover::before {
+            opacity: 1;
+        }
+
+        .email-display {
+            color: #8ca5c7;
+            font-size: 1rem;
+            font-weight: 300;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .email-display:hover {
+            color: var(--light-blue);
         }
 
         /* Mobile Optimization */
+        @media (max-width: 1200px) {
+            #content-wrapper {
+                padding: 5%;
+            }
+        }
+
         @media (max-width: 992px) {
             #content-wrapper {
-                justify-content: center; /* Center on tablets and mobile */
+                justify-content: center;
             }
         }
 
         @media (max-width: 768px) {
             #content-wrapper {
-                padding: 20px;
-                align-items: flex-end; /* Push card a bit down so globe is visible on top */
+                padding: 15px;
+                align-items: flex-end;
             }
             .glass-card {
-                padding: 2rem 1.5rem;
-                margin-top: 20vh; /* Space for the globe */
+                padding: 2.5rem 1.5rem;
+                margin-top: 10vh;
+                border-radius: 20px;
             }
             h1 {
                 font-size: 2.8rem;
             }
             h2 {
-                font-size: 1.1rem;
+                font-size: 1rem;
                 margin-bottom: 2rem;
             }
             .service-item {
-                padding: 1rem 1rem;
+                padding: 1rem 1.2rem;
+            }
+            .service-text {
                 font-size: 0.95rem;
+            }
+            .action-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
             }
             .btn-primary {
                 width: 100%;
                 box-sizing: border-box;
+                padding: 1rem 2rem;
             }
         }
         
         @media (max-width: 480px) {
             h1 {
-                font-size: 2.2rem;
+                font-size: 2.4rem;
             }
             .logo {
                 font-size: 1rem;
@@ -200,6 +329,10 @@
 </head>
 <body>
 
+<!-- Ambient Orbs -->
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
 <!-- 3D Background -->
 <div id="globe-container"></div>
 
@@ -207,25 +340,28 @@
 <div id="content-wrapper">
     <div class="glass-card">
         <div class="logo">Công Nghệ Số TQ</div>
-        <h1>Kiến tạo tương lai số</h1>
-        <h2>Đối tác tin cậy cung cấp giải pháp công nghệ toàn diện, đồng hành cùng sự phát triển của doanh nghiệp.</h2>
+        <h1>Kiến tạo <br><span class="highlight-text">Tương Lai Số</span></h1>
+        <h2>Đối tác chiến lược cung cấp các giải pháp công nghệ thông minh, đồng hành bứt phá mọi giới hạn của doanh nghiệp trong kỷ nguyên 4.0.</h2>
         
         <div class="services">
             <div class="service-item">
                 <span class="service-icon">⚡</span>
-                <span>Tư vấn & Thiết kế Cơ sở hạ tầng máy tính</span>
+                <span class="service-text">Tư vấn & Thiết kế Cơ sở hạ tầng máy tính</span>
             </div>
             <div class="service-item">
                 <span class="service-icon">🌐</span>
-                <span>Giải pháp Công nghệ thông tin toàn diện</span>
+                <span class="service-text">Giải pháp Công nghệ thông tin toàn diện</span>
             </div>
             <div class="service-item">
                 <span class="service-icon">🧠</span>
-                <span>Tích hợp & Dịch vụ Trí tuệ nhân tạo (AI)</span>
+                <span class="service-text">Tích hợp & Dịch vụ Trí tuệ nhân tạo (AI)</span>
             </div>
         </div>
 
-        <a href="#" class="btn-primary">Liên Hệ Ngay</a>
+        <div class="action-group">
+            <a href="mailto:tqdigi.pages.dev@gmail.com" class="btn-primary">Liên Hệ Ngay</a>
+            <a href="mailto:tqdigi.pages.dev@gmail.com" class="email-display">tqdigi.pages.dev@gmail.com</a>
+        </div>
     </div>
 </div>
 
@@ -234,81 +370,121 @@
     const container = document.getElementById('globe-container');
     const scene = new THREE.Scene();
     
-    // Camera setup with fov adjustment for mobile
-    const getFov = () => window.innerWidth < 768 ? 85 : 75;
+    // Camera setup
+    const getFov = () => window.innerWidth < 768 ? 90 : 70;
     const camera = new THREE.PerspectiveCamera(getFov(), window.innerWidth / window.innerHeight, 0.1, 1000);
     
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Optimize performance on high-DPI screens
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
     // Responsive globe sizing
-    const getGlobeSize = () => window.innerWidth < 768 ? 2 : 2.8;
+    const getGlobeSize = () => window.innerWidth < 768 ? 2.2 : 3.2;
     const globeSize = getGlobeSize();
 
-    // Create Globe
+    // Create Globe Group for easier rotation
+    const globeGroup = new THREE.Group();
+    scene.add(globeGroup);
+
+    // Outer Wireframe Sphere
     const geometry = new THREE.SphereGeometry(globeSize, 64, 64);
-    
     const material = new THREE.MeshBasicMaterial({ 
-        color: 0x4da8da, 
+        color: 0x00d2ff, 
         wireframe: true,
         transparent: true,
-        opacity: 0.15
+        opacity: 0.08
     });
-    
     const globe = new THREE.Mesh(geometry, material);
-    scene.add(globe);
+    globeGroup.add(globe);
 
-    // Inner solid sphere for depth
-    const innerGeometry = new THREE.SphereGeometry(globeSize * 0.98, 32, 32);
-    const innerMaterial = new THREE.MeshBasicMaterial({
-        color: 0x001f4d,
+    // Inner solid sphere for depth & glow
+    const innerGeometry = new THREE.SphereGeometry(globeSize * 0.98, 48, 48);
+    const innerMaterial = new THREE.MeshPhongMaterial({
+        color: 0x001133,
+        emissive: 0x00081a,
         transparent: true,
-        opacity: 0.8
+        opacity: 0.9,
+        shininess: 50
     });
     const innerGlobe = new THREE.Mesh(innerGeometry, innerMaterial);
-    scene.add(innerGlobe);
+    globeGroup.add(innerGlobe);
 
-    // Add particles (stars/nodes)
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = window.innerWidth < 768 ? 800 : 2500;
-    const posArray = new Float32Array(particlesCount * 3);
+    // Add glowing atmosphere
+    const atmosGeometry = new THREE.SphereGeometry(globeSize * 1.1, 32, 32);
+    const atmosMaterial = new THREE.MeshBasicMaterial({
+        color: 0x0047AB,
+        transparent: true,
+        opacity: 0.1,
+        blending: THREE.AdditiveBlending,
+        side: THREE.BackSide
+    });
+    const atmosphere = new THREE.Mesh(atmosGeometry, atmosMaterial);
+    globeGroup.add(atmosphere);
 
-    for(let i = 0; i < particlesCount * 3; i++) {
-        posArray[i] = (Math.random() - 0.5) * 15;
+    // Add Data points/lines to surface
+    const pointsGeometry = new THREE.BufferGeometry();
+    const pointsCount = window.innerWidth < 768 ? 100 : 300;
+    const posArray = new Float32Array(pointsCount * 3);
+
+    for(let i = 0; i < pointsCount; i++) {
+        const phi = Math.acos(-1 + (2 * i) / pointsCount);
+        const theta = Math.sqrt(pointsCount * Math.PI) * phi;
+        
+        posArray[i*3] = globeSize * Math.cos(theta) * Math.sin(phi);
+        posArray[i*3+1] = globeSize * Math.sin(theta) * Math.sin(phi);
+        posArray[i*3+2] = globeSize * Math.cos(phi);
     }
 
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-    const particlesMaterial = new THREE.PointsMaterial({
-        size: 0.02,
-        color: 0x4da8da,
+    pointsGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    const pointsMaterial = new THREE.PointsMaterial({
+        size: 0.05,
+        color: 0x00d2ff,
         transparent: true,
-        opacity: 0.6,
+        opacity: 0.8,
         blending: THREE.AdditiveBlending
     });
+    const points = new THREE.Points(pointsGeometry, pointsMaterial);
+    globeGroup.add(points);
 
+    // Add ambient floating particles
+    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesCount = window.innerWidth < 768 ? 500 : 1500;
+    const pPosArray = new Float32Array(particlesCount * 3);
+
+    for(let i = 0; i < particlesCount * 3; i++) {
+        pPosArray[i] = (Math.random() - 0.5) * 20;
+    }
+
+    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(pPosArray, 3));
+    const particlesMaterial = new THREE.PointsMaterial({
+        size: 0.02,
+        color: 0x00d2ff,
+        transparent: true,
+        opacity: 0.4,
+        blending: THREE.AdditiveBlending
+    });
     const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particlesMesh);
 
-    // Position globe: right side on desktop, center-top on mobile
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    scene.add(ambientLight);
+    const pointLight = new THREE.PointLight(0x00d2ff, 1);
+    pointLight.position.set(5, 3, 5);
+    scene.add(pointLight);
+
+    // Position globe
     const updateGlobePosition = () => {
         if(window.innerWidth > 992) {
-            globe.position.x = 3.5;
-            innerGlobe.position.x = 3.5;
-            globe.position.y = 0;
-            innerGlobe.position.y = 0;
+            globeGroup.position.set(4, 0, 0);
         } else {
-            globe.position.x = 0;
-            innerGlobe.position.x = 0;
-            // Move globe up a bit on mobile so it doesn't get covered completely by the card
-            globe.position.y = 1.5; 
-            innerGlobe.position.y = 1.5;
+            globeGroup.position.set(0, 2, -2);
         }
     };
     updateGlobePosition();
 
-    camera.position.z = 7;
+    camera.position.z = 8;
 
     // Interactive rotation based on mouse/touch
     let mouseX = 0;
@@ -320,14 +496,14 @@
     let windowHalfY = window.innerHeight / 2;
 
     document.addEventListener('mousemove', (event) => {
-        mouseX = (event.clientX - windowHalfX) * 0.001;
-        mouseY = (event.clientY - windowHalfY) * 0.001;
+        mouseX = (event.clientX - windowHalfX) * 0.0005;
+        mouseY = (event.clientY - windowHalfY) * 0.0005;
     });
 
     document.addEventListener('touchmove', (event) => {
         if(event.touches.length > 0) {
-            mouseX = (event.touches[0].clientX - windowHalfX) * 0.002;
-            mouseY = (event.touches[0].clientY - windowHalfY) * 0.002;
+            mouseX = (event.touches[0].clientX - windowHalfX) * 0.001;
+            mouseY = (event.touches[0].clientY - windowHalfY) * 0.001;
         }
     }, { passive: true });
 
@@ -343,15 +519,15 @@
         targetY = mouseY * 0.5;
 
         // Smooth rotation
-        globe.rotation.y += 0.05 * (targetX - globe.rotation.y) + 0.002;
-        globe.rotation.x += 0.05 * (targetY - globe.rotation.x) + 0.001;
-        
-        innerGlobe.rotation.y = globe.rotation.y;
-        innerGlobe.rotation.x = globe.rotation.x;
+        globeGroup.rotation.y += 0.05 * (targetX - globeGroup.rotation.y) + 0.002;
+        globeGroup.rotation.x += 0.05 * (targetY - globeGroup.rotation.x) + 0.001;
 
         // Floating particles
-        particlesMesh.rotation.y -= 0.0005;
-        particlesMesh.rotation.x = Math.sin(elapsedTime * 0.1) * 0.1;
+        particlesMesh.rotation.y -= 0.0002;
+        particlesMesh.position.y = Math.sin(elapsedTime * 0.2) * 0.5;
+
+        // Pulse effect for atmosphere
+        atmosphere.scale.setScalar(1 + Math.sin(elapsedTime * 2) * 0.02);
 
         renderer.render(scene, camera);
     }
@@ -369,13 +545,11 @@
         
         renderer.setSize(window.innerWidth, window.innerHeight);
         
-        // Update globe geometry if crossing breakpoint
+        // Refresh globe size
         const newSize = getGlobeSize();
         if(globe.geometry.parameters.radius !== newSize) {
-            globe.geometry.dispose();
-            innerGlobe.geometry.dispose();
-            globe.geometry = new THREE.SphereGeometry(newSize, 64, 64);
-            innerGlobe.geometry = new THREE.SphereGeometry(newSize * 0.98, 32, 32);
+            // Complex geometry rebuilds omitted for brevity, simple scale applied
+            globeGroup.scale.setScalar(newSize / globeSize);
         }
         
         updateGlobePosition();
