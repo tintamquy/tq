@@ -5,155 +5,278 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Công ty TNHH Công Nghệ Số TQ</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        body {
+        :root {
+            --primary-blue: #0047AB;
+            --light-blue: #4da8da;
+            --text-color: #ffffff;
+            --glass-bg: rgba(11, 17, 32, 0.65);
+            --glass-border: rgba(77, 168, 218, 0.2);
+        }
+
+        body, html {
             margin: 0;
-            overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0b1120;
-            color: white;
-        }
-        #container {
-            display: flex;
-            height: 100vh;
-        }
-        #content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 5rem;
-            z-index: 10;
-        }
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            color: #4da8da; /* Light cobalt accent */
-            text-shadow: 0 0 10px rgba(77, 168, 218, 0.5);
-        }
-        h2 {
-            font-size: 1.5rem;
-            font-weight: 300;
-            color: #a0aec0;
-            margin-bottom: 2rem;
-        }
-        ul {
-            list-style: none;
             padding: 0;
-            font-size: 1.2rem;
-            line-height: 2;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            background-color: #050810;
+            color: var(--text-color);
         }
-        li::before {
-            content: "✓";
-            color: #4da8da;
-            margin-right: 10px;
-        }
-        .btn {
-            display: inline-block;
-            margin-top: 2rem;
-            padding: 15px 30px;
-            background-color: #0047AB; /* Cobalt blue */
-            color: white;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 71, 171, 0.5);
-            width: fit-content;
-        }
-        .btn:hover {
-            background-color: #003380;
-            box-shadow: 0 6px 20px rgba(0, 71, 171, 0.7);
-            transform: translateY(-2px);
-        }
+
+        /* Canvas taking the full background */
         #globe-container {
-            flex: 1;
-            position: relative;
-        }
-        canvas {
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
+            z-index: 1;
         }
-        
+
+        /* Overlay content */
+        #content-wrapper {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Default for desktop: content on the left */
+            min-height: 100vh;
+            padding: 5%;
+            pointer-events: none; /* Let clicks pass through to globe if needed */
+        }
+
+        .glass-card {
+            pointer-events: auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6);
+            transform: translateY(30px);
+            opacity: 0;
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation-delay: 0.2s;
+        }
+
+        @keyframes fadeUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--light-blue);
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            border-bottom: 2px solid var(--primary-blue);
+            padding-bottom: 5px;
+        }
+
+        h1 {
+            font-size: 3.8rem;
+            font-weight: 700;
+            margin: 0 0 1rem 0;
+            line-height: 1.15;
+            background: linear-gradient(135deg, #ffffff 0%, #8ca5c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: #a0aec0;
+            margin: 0 0 2.5rem 0;
+            line-height: 1.6;
+        }
+
+        .services {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.2rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .service-item:hover {
+            background: rgba(77, 168, 218, 0.15);
+            border-color: rgba(77, 168, 218, 0.4);
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .service-icon {
+            color: var(--light-blue);
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.1rem 2.5rem;
+            background: linear-gradient(135deg, var(--primary-blue), #003380);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 71, 171, 0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 71, 171, 0.5);
+            background: linear-gradient(135deg, #0056cc, var(--primary-blue));
+        }
+
+        /* Mobile Optimization */
+        @media (max-width: 992px) {
+            #content-wrapper {
+                justify-content: center; /* Center on tablets and mobile */
+            }
+        }
+
         @media (max-width: 768px) {
-            #container {
-                flex-direction: column;
+            #content-wrapper {
+                padding: 20px;
+                align-items: flex-end; /* Push card a bit down so globe is visible on top */
             }
-            #content {
-                padding: 2rem;
-                flex: auto;
-                height: 50vh;
-            }
-            #globe-container {
-                height: 50vh;
-                flex: auto;
+            .glass-card {
+                padding: 2rem 1.5rem;
+                margin-top: 20vh; /* Space for the globe */
             }
             h1 {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
+            }
+            h2 {
+                font-size: 1.1rem;
+                margin-bottom: 2rem;
+            }
+            .service-item {
+                padding: 1rem 1rem;
+                font-size: 0.95rem;
+            }
+            .btn-primary {
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            .logo {
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
 
-<div id="container">
-    <div id="content">
-        <h1>Công Nghệ Số TQ</h1>
-        <h2>Kiến tạo tương lai số của bạn</h2>
-        <ul>
-            <li>Tư vấn thiết kế cơ sở hạ tầng máy tính</li>
-            <li>Giải pháp công nghệ thông tin toàn diện</li>
-            <li>Dịch vụ và ứng dụng Trí tuệ nhân tạo (AI)</li>
-        </ul>
-        <a href="#" class="btn">Liên Hệ Ngay</a>
+<!-- 3D Background -->
+<div id="globe-container"></div>
+
+<!-- Content Overlay -->
+<div id="content-wrapper">
+    <div class="glass-card">
+        <div class="logo">Công Nghệ Số TQ</div>
+        <h1>Kiến tạo tương lai số</h1>
+        <h2>Đối tác tin cậy cung cấp giải pháp công nghệ toàn diện, đồng hành cùng sự phát triển của doanh nghiệp.</h2>
+        
+        <div class="services">
+            <div class="service-item">
+                <span class="service-icon">⚡</span>
+                <span>Tư vấn & Thiết kế Cơ sở hạ tầng máy tính</span>
+            </div>
+            <div class="service-item">
+                <span class="service-icon">🌐</span>
+                <span>Giải pháp Công nghệ thông tin toàn diện</span>
+            </div>
+            <div class="service-item">
+                <span class="service-icon">🧠</span>
+                <span>Tích hợp & Dịch vụ Trí tuệ nhân tạo (AI)</span>
+            </div>
+        </div>
+
+        <a href="#" class="btn-primary">Liên Hệ Ngay</a>
     </div>
-    <div id="globe-container"></div>
 </div>
 
 <script>
-    // Three.js Setup
+    // Three.js Setup for full screen background
     const container = document.getElementById('globe-container');
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    // Camera setup with fov adjustment for mobile
+    const getFov = () => window.innerWidth < 768 ? 85 : 75;
+    const camera = new THREE.PerspectiveCamera(getFov(), window.innerWidth / window.innerHeight, 0.1, 1000);
+    
+    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Optimize performance on high-DPI screens
+    renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
+    // Responsive globe sizing
+    const getGlobeSize = () => window.innerWidth < 768 ? 2 : 2.8;
+    const globeSize = getGlobeSize();
+
     // Create Globe
-    const geometry = new THREE.SphereGeometry(2.5, 64, 64);
+    const geometry = new THREE.SphereGeometry(globeSize, 64, 64);
     
-    // Texture/Material for globe - using wireframe for a tech look
     const material = new THREE.MeshBasicMaterial({ 
         color: 0x4da8da, 
         wireframe: true,
         transparent: true,
-        opacity: 0.2
+        opacity: 0.15
     });
     
     const globe = new THREE.Mesh(geometry, material);
     scene.add(globe);
 
-    // Inner sphere
-    const innerGeometry = new THREE.SphereGeometry(2.45, 32, 32);
+    // Inner solid sphere for depth
+    const innerGeometry = new THREE.SphereGeometry(globeSize * 0.98, 32, 32);
     const innerMaterial = new THREE.MeshBasicMaterial({
-        color: 0x0047AB,
+        color: 0x001f4d,
         transparent: true,
-        opacity: 0.1
+        opacity: 0.8
     });
     const innerGlobe = new THREE.Mesh(innerGeometry, innerMaterial);
     scene.add(innerGlobe);
 
-    // Add particles around the globe
+    // Add particles (stars/nodes)
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 1500;
+    const particlesCount = window.innerWidth < 768 ? 800 : 2500;
     const posArray = new Float32Array(particlesCount * 3);
 
     for(let i = 0; i < particlesCount * 3; i++) {
-        posArray[i] = (Math.random() - 0.5) * 12;
+        posArray[i] = (Math.random() - 0.5) * 15;
     }
 
     particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
@@ -161,25 +284,74 @@
         size: 0.02,
         color: 0x4da8da,
         transparent: true,
-        opacity: 0.8
+        opacity: 0.6,
+        blending: THREE.AdditiveBlending
     });
 
     const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particlesMesh);
 
-    camera.position.z = 6;
+    // Position globe: right side on desktop, center-top on mobile
+    const updateGlobePosition = () => {
+        if(window.innerWidth > 992) {
+            globe.position.x = 3.5;
+            innerGlobe.position.x = 3.5;
+            globe.position.y = 0;
+            innerGlobe.position.y = 0;
+        } else {
+            globe.position.x = 0;
+            innerGlobe.position.x = 0;
+            // Move globe up a bit on mobile so it doesn't get covered completely by the card
+            globe.position.y = 1.5; 
+            innerGlobe.position.y = 1.5;
+        }
+    };
+    updateGlobePosition();
+
+    camera.position.z = 7;
+
+    // Interactive rotation based on mouse/touch
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetX = 0;
+    let targetY = 0;
+    
+    let windowHalfX = window.innerWidth / 2;
+    let windowHalfY = window.innerHeight / 2;
+
+    document.addEventListener('mousemove', (event) => {
+        mouseX = (event.clientX - windowHalfX) * 0.001;
+        mouseY = (event.clientY - windowHalfY) * 0.001;
+    });
+
+    document.addEventListener('touchmove', (event) => {
+        if(event.touches.length > 0) {
+            mouseX = (event.touches[0].clientX - windowHalfX) * 0.002;
+            mouseY = (event.touches[0].clientY - windowHalfY) * 0.002;
+        }
+    }, { passive: true });
 
     // Animation Loop
+    const clock = new THREE.Clock();
+
     function animate() {
         requestAnimationFrame(animate);
-
-        globe.rotation.y += 0.002;
-        globe.rotation.x += 0.001;
         
-        innerGlobe.rotation.y -= 0.001;
+        const elapsedTime = clock.getElapsedTime();
 
-        particlesMesh.rotation.y -= 0.001;
-        particlesMesh.rotation.x += 0.0005;
+        targetX = mouseX * 0.5;
+        targetY = mouseY * 0.5;
+
+        // Smooth rotation
+        globe.rotation.y += 0.05 * (targetX - globe.rotation.y) + 0.002;
+        globe.rotation.x += 0.05 * (targetY - globe.rotation.x) + 0.001;
+        
+        innerGlobe.rotation.y = globe.rotation.y;
+        innerGlobe.rotation.x = globe.rotation.x;
+
+        // Floating particles
+        particlesMesh.rotation.y -= 0.0005;
+        particlesMesh.rotation.x = Math.sin(elapsedTime * 0.1) * 0.1;
 
         renderer.render(scene, camera);
     }
@@ -188,9 +360,25 @@
 
     // Handle Resize
     window.addEventListener('resize', () => {
-        camera.aspect = container.clientWidth / container.clientHeight;
+        windowHalfX = window.innerWidth / 2;
+        windowHalfY = window.innerHeight / 2;
+        
+        camera.fov = getFov();
+        camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        
+        // Update globe geometry if crossing breakpoint
+        const newSize = getGlobeSize();
+        if(globe.geometry.parameters.radius !== newSize) {
+            globe.geometry.dispose();
+            innerGlobe.geometry.dispose();
+            globe.geometry = new THREE.SphereGeometry(newSize, 64, 64);
+            innerGlobe.geometry = new THREE.SphereGeometry(newSize * 0.98, 32, 32);
+        }
+        
+        updateGlobePosition();
     });
 </script>
 
